@@ -31,8 +31,8 @@ const w3wHandler = {
       let { words } = await ctx.request.body; // Get the three words in the phrase
       let w3wString = await words.split(' ').join('.'); // Join the words in the format expected by W3W
       const coords = await w3w.forward({ addr: w3wString }); // Get the coordinates from W3W
-      ctx.body = { coords }; // Return 200, also the coordinates
-      io.emit('newCoords', { coords }); // Emit the coords to the client side
+      ctx.body = { coords, w3wString }; // Return 200, also the coordinates
+      io.emit('newCoords', { coords, w3wString }); // Emit the coords to the client side
     } catch (e) {
       ctx.status = 400; // If error, return bad request
       ctx.body = { error: e }; // Return exact error data

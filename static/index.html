@@ -48,6 +48,23 @@
         display: flex;
         justify-content: center;
       }
+
+      #footer {
+        position: fixed;
+        bottom: 0;
+      }
+
+      h3 {
+        background: rgba(0, 0, 0, 0.7);
+        color: #eee;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .green {
+        background: rgba(0, 255, 0, 0.7);
+      }
     </style>
     <title>W3W Speech To Text</title>
   </head>
@@ -56,19 +73,25 @@
       <div class="row">
         <h1>W3W Speech To Location</h1>
       </div>
+      <div class="row u-max-full-width" id="footer">
+        <h3 id="location">Awaiting location...</h3>
+      </div>
     </div>
     <div id="map"></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script>
+      let locationArea = document.getElementById('location');
       (function() {
         var socket = io();
         socket.on('newCoords', inboundCoords => {
-          let { coords } = inboundCoords;
+          let { coords, w3wString } = inboundCoords;
           let coordsArray = [
             parseFloat(coords.split(',')[0]),
             parseFloat(coords.split(',')[1])
           ];
           console.log(coordsArray);
+          locationArea.className = 'green';
+          locationArea.innerHTML = w3wString;
           let marker = L.marker(coordsArray).addTo(map);
           map.flyTo(coordsArray);
         });
