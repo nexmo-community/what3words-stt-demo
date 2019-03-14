@@ -29,13 +29,18 @@ const w3wHandler = {
   process: async ctx => {
     try {
       let { words } = await ctx.request.body; // Get the three words in the phrase
-      let w3wString = await words.split(' ').join('.'); // Join the words in the format expected by W3W
+      let cleanWords = words.replace(/[.]/g, ''); // Azure does full stops at the end of phrases, remove that
+      let w3wString = await cleanWords
+        .split(' ')
+        .join('.')
+        .toLowerCase(); // Join the words in the format expected by W3W
+      console.log(w3wString);
       const coords = await w3w.forward({ addr: w3wString }); // Get the coordinates from W3W
       ctx.body = { coords, w3wString }; // Return 200, also the coordinates
       io.emit('newCoords', { coords, w3wString }); // Emit the coords to the client side
     } catch (e) {
       ctx.status = 400; // If error, return bad request
-      ctx.body = { error: e }; // Return exact error data
+      ctx.body = e; // Return exact error data
     }
   }
 };
