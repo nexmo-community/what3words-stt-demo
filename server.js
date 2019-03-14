@@ -45,6 +45,7 @@ const w3wHandler = {
   }
 };
 
-app.use(router.get('/', serve('static')));
 app.use(router.post('/inbound', w3wHandler.process));
+app.use(router.get('/*', serve('static')));
+
 server.listen(PORT, () => console.log(`Server listening on ${PORT}`));
